@@ -26,4 +26,14 @@ module.exports = function(app) {
                 res.json(result);
             });
         });
+        
+    // get watchlists by user.
+    app.route('/api/user/watchlists')
+        .get(function(req, res) {
+            // currently set as impomales since authentication not set up yet.
+            Watchlist.find({watched_by: 'impomales'}, function(err, result) {
+                if (err) throw new Error('failed to get watchlists by ' + req.user._id);
+                res.json(result);
+            });
+        });
 };

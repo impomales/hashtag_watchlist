@@ -63,7 +63,7 @@ describe('Test App', function() {
             });
             
             var user = {
-                displayName: 'impomales',
+                _id: 'impomales',
                 name: {
                     firstName: 'Isaias',
                     middleName: 'Miguel',
@@ -77,7 +77,7 @@ describe('Test App', function() {
                     assert.ifError(err);
                     User.findById(data._id, function(err, res) {
                         assert.ifError(err);
-                        assert.equal(res.displayName, 'impomales');
+                        assert.equal(res._id, 'impomales');
                         assert.equal(res.name.firstName, 'Isaias');
                         assert.equal(res.name.middleName, 'Miguel');
                         assert.equal(res.name.lastName, 'Pomales');
