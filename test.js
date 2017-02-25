@@ -7,6 +7,7 @@ var User = require('./models/user');
 
 describe('Test App', function() {
     before(function() {
+        mongoose.Promise = require('bluebird');
         mongoose.connect('mongodb://' + process.env.IP + '/test');
     });
     

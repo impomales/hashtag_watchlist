@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 
 var watchlist = new mongoose.Schema({
     hashtag_title: {type: String, required: true, match: /^#\w+/i},

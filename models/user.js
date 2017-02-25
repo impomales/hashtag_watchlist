@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 
 var user = new mongoose.Schema({
     displayName: String,
