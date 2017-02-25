@@ -1,14 +1,26 @@
 'use strict';
 
 var assert = require('assert');
+var express = require('express');
 var mongoose = require('mongoose');
+var routes = require('./routes/routes');
+var bodyParser = require('body-parser');
+var status = require('http-status');
+var superagent = require('superagent');
 var Watchlist = require('./models/watchlist');
 var User = require('./models/user');
+var URL_ROOT =  'http://' + process.env.IP + ':' + process.env.PORT;
 
 describe('Test App', function() {
     before(function() {
+        var app = express();
         mongoose.Promise = require('bluebird');
         mongoose.connect('mongodb://' + process.env.IP + '/test');
+        
+        app.use(bodyParser.json());
+        routes(app);
+        
+        app.listen(process.env.PORT);
     });
     
     describe('Mongoose Models', function() {
@@ -89,8 +101,16 @@ describe('Test App', function() {
     });
     
     describe('API', function() {
-        it('can do nothing', function() {
-            
+        it('has a "/" route.', function(done) {
+            superagent.get(URL_ROOT + '/', function(err, res) {
+                assert.ifError(err);
+                var result;
+                assert.doesNotThrow(function() {
+                    result = JSON.parse(res.text);
+                });
+                assert.equal(result.text, 'hello...');
+                done();
+            });
         });
     });
 });
