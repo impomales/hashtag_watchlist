@@ -87,4 +87,10 @@ describe('Test App', function() {
             });
         });
     });
+    
+    describe('API', function() {
+        it('can do nothing', function() {
+            
+        });
+    });
 });
