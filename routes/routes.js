@@ -44,4 +44,24 @@ module.exports = function(app) {
                 res.json(result);
             });
         });
+        
+    app.route('/api/edit')
+        .put(function(req, res) {
+            var update = req.body;
+            
+            Watchlist.findByIdAndUpdate(update._id, update, function(err, result) {
+                if (err) throw new Error('failed to edit watchlist with id: ' + update._id);
+                res.json(result);
+            });
+        });
+        
+    app.route('/api/delete')
+        .delete(function(req, res) {
+            var deleted = req.body;
+            
+            Watchlist.remove({_id: deleted._id}, function(err, result) {
+                if (err) throw new Error('failed to delete watchlist with id: ' + deleted._id);
+                res.json(result);
+            });
+        });
 };
