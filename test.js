@@ -10,6 +10,7 @@ var superagent = require('superagent');
 var Watchlist = require('./models/watchlist');
 var User = require('./models/user');
 var URL_ROOT =  'http://' + process.env.IP + ':' + process.env.PORT;
+var server;
 
 describe('Test App', function() {
     before(function() {
@@ -20,7 +21,11 @@ describe('Test App', function() {
         app.use(bodyParser.json());
         routes(app);
         
-        app.listen(process.env.PORT);
+        server = app.listen(process.env.PORT);
+    });
+    
+    after(function() {
+        server.close();
     });
     
     describe('Mongoose Models', function() {
@@ -101,6 +106,37 @@ describe('Test App', function() {
     });
     
     describe('API', function() {
+        var users = [{
+            _id: 'impomales',
+            name: {
+                firstName: 'Isaias',
+                middleName: 'Miguel',
+                lastName: 'Pomales'
+            },
+            watchlists: []
+        }];
+        var watchlists = [
+            {hashtag_title: '#cats'},
+            {hashtag_title: '#dogs'},
+            {hashtag_title: '#birds'}
+        ];
+        
+        beforeEach(function(done) {
+            User.remove({}, function(err) {
+                assert.ifError(err);
+                Watchlist.remove({}, function(err) {
+                    assert.ifError(err);
+                    User.create(users, function(err) {
+                        assert.ifError(err);
+                        Watchlist.create(watchlists, function(err) {
+                            assert.ifError(err);
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+        
         it('has a "/" route.', function(done) {
             superagent.get(URL_ROOT + '/', function(err, res) {
                 assert.ifError(err);
@@ -109,6 +145,16 @@ describe('Test App', function() {
                     result = JSON.parse(res.text);
                 });
                 assert.equal(result.text, 'hello...');
+                done();
+            });
+        });
+        
+        it('can load all watchlists', function(done) {
+            superagent.get(URL_ROOT + '/api/watchlists', function(err, res) {
+                assert.ifError(err);
+                assert.doesNotThrow(function() {
+                    JSON.parse(res.text);
+                });
                 done();
             });
         });
