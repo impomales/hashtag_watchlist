@@ -1,13 +1,31 @@
 'use strict';
 
-var passport = require('passport');
+var path = process.cwd();
 var Watchlist = require('../models/watchlist');
-var User = require('../models/user');
 
-module.exports = function(app) {
-    app.route('/')
+module.exports = function(app, passport) {
+    function isLoggedIn(req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        } else {
+            res.redirect('/login');
+        }
+    }
+    
+    app.route('/login')
         .get(function(req, res) {
-            res.json({text: 'hello...'});
+            res.sendFile(path + '/public/login.html');
+        });
+        
+    app.route('/logout')
+        .get(function(req, res) {
+            req.logout();
+            res.redirect('/login');
+        });
+    
+    app.route('/')
+        .get(isLoggedIn, function(req, res) {
+            res.sendFile(path + '/public/index.html');
         });
     
     // twitter authentication.
@@ -16,7 +34,7 @@ module.exports = function(app) {
         passport.authenticate('twitter', {
             successRedirect: '/',
             failuteRedirect: '/login'
-        }))
+        }));
     
     // all watchlists.
     app.route('/api/watchlists')
