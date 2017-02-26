@@ -1,5 +1,6 @@
 'use strict';
 
+var passport = require('passport');
 var Watchlist = require('../models/watchlist');
 var User = require('../models/user');
 
@@ -8,6 +9,14 @@ module.exports = function(app) {
         .get(function(req, res) {
             res.json({text: 'hello...'});
         });
+    
+    // twitter authentication.
+    app.get('/auth/twitter', passport.authenticate('twitter'));
+    app.get('/auth/twitter/callback',
+        passport.authenticate('twitter', {
+            successRedirect: '/',
+            failuteRedirect: '/login'
+        }))
     
     // all watchlists.
     app.route('/api/watchlists')
