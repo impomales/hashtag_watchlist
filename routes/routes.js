@@ -16,6 +16,14 @@ module.exports = function(app) {
                 if (err) throw new Error('failed to get all watchlists');
                 res.json(result);
             });
+        })
+        .post(function(req, res) {
+            var watchlist = req.body;
+            
+            Watchlist.create(watchlist, function(err, doc) {
+                if (err) throw new Error('failed to add new watchlist');
+                res.json(doc);
+            });
         });
         
     // get watchlist by id.
