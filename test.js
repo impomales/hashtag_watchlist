@@ -5,8 +5,9 @@ var express = require('express');
 var mongoose = require('mongoose');
 var routes = require('./routes/routes');
 var bodyParser = require('body-parser');
-var status = require('http-status');
 var superagent = require('superagent');
+var passport = require('passport');
+var session = require('express-session');
 var Watchlist = require('./models/watchlist');
 var User = require('./models/user');
 var URL_ROOT =  'http://' + process.env.IP + ':' + process.env.PORT;
@@ -15,11 +16,22 @@ var server;
 describe('Test App', function() {
     before(function() {
         var app = express();
+        require('dotenv').load();
+        require('./config/passport')(passport);
         mongoose.Promise = require('bluebird');
         mongoose.connect('mongodb://' + process.env.IP + '/test');
         
         app.use(bodyParser.json());
-        routes(app);
+        
+        app.use(session({
+            secret: 'testSESSION',
+            resave: false,
+            saveUninitialized: true
+        }));
+        
+        app.use(passport.initialize());
+        app.use(passport.session());
+        routes(app, passport);
         
         server = app.listen(process.env.PORT);
     });
@@ -134,18 +146,6 @@ describe('Test App', function() {
                         });
                     });
                 });
-            });
-        });
-        
-        it('has a "/" route.', function(done) {
-            superagent.get(URL_ROOT + '/', function(err, res) {
-                assert.ifError(err);
-                var result;
-                assert.doesNotThrow(function() {
-                    result = JSON.parse(res.text);
-                });
-                assert.equal(result.text, 'hello...');
-                done();
             });
         });
         
