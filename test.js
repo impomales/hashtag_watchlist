@@ -178,5 +178,7 @@ describe('Test App', function() {
                     done();
                 });
         });
+        
+        // add tests for editing and deleting watchlists.
     });
 });
