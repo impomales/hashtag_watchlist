@@ -105,6 +105,8 @@ class AddHash extends React.Component {
                         <input 
                             type='text' 
                             placeholder='Add a hash tag'
+                            pattern='^#\w+'
+                            title='hashtag must start with "#" and only alphamuneric'
                             value={this.state.value}
                             onChange={this.handleChange}/>
                     </form>
