@@ -20,17 +20,13 @@ module.exports = function(passport) {
         callbackURL: process.env.APP_URL + '/auth/twitter/callback'
     },
     function(token, tokenSecret, profile, done) {
-        User.findOne({'_id': profile.displayName}, function(err, user) {
+        User.findOne({'_id': profile.username}, function(err, user) {
             if (err) return done(err);
             if (user) return done(null, user);
             else {
                 var newUser = {
-                    _id: profile.displayName,
-                    name: {
-                        firstName: profile.givenName,
-                        middleName: profile.middleName,
-                        lastName: profile.familyName
-                    },
+                    _id: profile.username,
+                    name: profile.displayName,
                     watchlists: []
                 };
                 

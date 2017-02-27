@@ -4,12 +4,8 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 var user = new mongoose.Schema({
-    _id: String,
-    name: {
-        firstName: String,
-        middleName: String,
-        lastName: String
-    },
+    _id: {type: String, required: true},
+    name: String,
     watchlists: {
         type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Watchlist'}],
         validate: [max_array_length, '{PATH} exceeds array length of 3']
