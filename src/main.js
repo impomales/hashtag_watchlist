@@ -28,7 +28,6 @@ class Hash extends React.Component {
     }
     
     render() {
-        console.log(this.state.tweets);
         var tweets = this.state.tweets.map(function(item, index) {
             return (
                 <Tweet 
@@ -68,12 +67,46 @@ class HashRow extends React.Component {
 }
         
 class AddHash extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {value: ''};
+        
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+    
+    handleSubmit(event) {
+        event.preventDefault();
+        var watchlist = this.state;
+        $.ajax({
+            url: '/api/watchlists',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(watchlist),
+            success: function(data) {
+                console.log('watchlist added successfully');
+                this.props.update();
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    }
+    
     render() {
         if (this.props.length < 3) {
             return (
                 <div>
-                    <form>
-                        <input type='text' placeholder='Add a hash tag' />
+                    <form onSubmit={this.handleSubmit}>
+                        <input 
+                            type='text' 
+                            placeholder='Add a hash tag'
+                            value={this.state.value}
+                            onChange={this.handleChange}/>
                     </form>
                 </div>
             );
@@ -89,7 +122,7 @@ class Body extends React.Component {
         return (
             <div>
                 <HashRow watchlists={this.props.watchlists}/>
-                <AddHash length={this.props.watchlists.length}/>
+                <AddHash length={this.props.watchlists.length} update={this.props.update}/>
             </div>
         );
     }
@@ -123,6 +156,7 @@ class HashTagWatchLists extends React.Component {
     constructor(props) {
         super(props);
         this.state = {watchlists: []};
+        this.update = this.update.bind(this);
     }
     
     componentDidMount() {
@@ -131,11 +165,17 @@ class HashTagWatchLists extends React.Component {
         }.bind(this));
     }
     
+    update() {
+        $.ajax('/api/user/watchlists').done(function(data) {
+            this.setState({watchlists: data});
+        }.bind(this));
+    }
+
     render() {
         return (
             <div>
                 <Header />
-                <Body watchlists={this.state.watchlists}/>
+                <Body watchlists={this.state.watchlists} update={this.update}/>
             </div>
         );
     }

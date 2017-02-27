@@ -55,8 +55,11 @@ module.exports = function(app, passport) {
                 res.json(result);
             });
         })
-        .post(function(req, res) {
-            var watchlist = req.body;
+        .post(isLoggedIn, function(req, res) {
+            var watchlist = {
+                hashtag_title: req.body.value,
+                watched_by: req.user._id
+            };
             // check length of user watchlist array before adding another.
             Watchlist.create(watchlist, function(err, doc) {
                 if (err) throw new Error('failed to add new watchlist');
