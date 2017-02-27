@@ -81,11 +81,7 @@ describe('Test App', function() {
             
             var user = {
                 _id: 'impomales',
-                name: {
-                    firstName: 'Isaias',
-                    middleName: 'Miguel',
-                    lastName: 'Pomales'
-                },
+                name: 'Isaias M. Pomales',
                 watchlists: []
             };
             
@@ -95,9 +91,7 @@ describe('Test App', function() {
                     User.findById(data._id, function(err, res) {
                         assert.ifError(err);
                         assert.equal(res._id, 'impomales');
-                        assert.equal(res.name.firstName, 'Isaias');
-                        assert.equal(res.name.middleName, 'Miguel');
-                        assert.equal(res.name.lastName, 'Pomales');
+                        assert.equal(res.name, 'Isaias M. Pomales');
                         assert.equal(res.watchlists.length, 0);
                         done();
                     });
@@ -120,11 +114,7 @@ describe('Test App', function() {
     describe('API', function() {
         var users = [{
             _id: 'impomales',
-            name: {
-                firstName: 'Isaias',
-                middleName: 'Miguel',
-                lastName: 'Pomales'
-            },
+            name: 'Isaias M. Pomales',
             watchlists: []
         }];
         var watchlists = [
