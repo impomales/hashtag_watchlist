@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+@import url("https://fonts.googleapis.com/css?family=Lato");
+body {
+  font-family: Montserrat;
+  color: #333A39; }
+
+#login:link {
+  text-decoration: none;
+  padding: 10px;
+  box-shadow: 0px 1px 2px #999; }
+
+#login:visited {
+  color: black; }
+
+#login:hover {
+  color: #008B78; }
+
+/*# sourceMappingURL=main.css.map */
