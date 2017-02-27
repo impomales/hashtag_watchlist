@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var $ = require('jquery');
 
 // static first.
 var watchlists = [
@@ -67,12 +68,23 @@ class Body extends React.Component {
 }
         
 class Header extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {user: {}};
+    }
+    
+    componentDidMount() {
+        $.ajax('/api/currentUser').done(function(data) {
+            this.setState({user: data});
+        }.bind(this));
+    }
+    
     render() {
         return (
             <div>
                 <img src='/public/img/small_logo.png' />
                 <h2>Signed in as: </h2>
-                <h4>Isaias M. Pomales</h4>
+                <h4>{this.state.user.name}</h4>
                 <a id='logInOut' href='/logout'>Log out</a>
             </div>
         );
