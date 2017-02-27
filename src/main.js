@@ -1,20 +1,48 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = require('jquery');
+require('dotenv').load();
 
-// static first.
-var watchlists = [
-            {hashtag_title: '#cats'},
-            {hashtag_title: '#dogs'},
-            {hashtag_title: '#birds'}
-        ];
-        
-class Hash extends React.Component {
+class Tweet extends React.Component {
     render() {
+        return (
+            <div>
+                <img src={this.props.image} />
+                <h3>{this.props.name}</h3>
+                <p>{this.props.text}</p>
+            </div>
+        );
+    }
+}
+
+class Hash extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {tweets: []};
+    }
+    
+    componentDidMount() {
+        $.ajax('/api/tweets/:' + this.props.title.substring(1)).done(function(data) {
+            this.setState({tweets: data.statuses});
+        }.bind(this));
+    }
+    
+    render() {
+        console.log(this.state.tweets);
+        var tweets = this.state.tweets.map(function(item, index) {
+            return (
+                <Tweet 
+                    key={index} 
+                    name={item.user.screen_name}
+                    text={item.text}
+                    image={item.user.profile_image_url} 
+                />
+            );
+        });
         return (
             <td>
                 <h1>{this.props.title}</h1>
-                <p>recent tweets</p>
+                {tweets}
             </td>
         );
     }
@@ -92,17 +120,28 @@ class Header extends React.Component {
 }
 
 class HashTagWatchLists extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {watchlists: []};
+    }
+    
+    componentDidMount() {
+        $.ajax('/api/user/watchlists').done(function(data) {
+            this.setState({watchlists: data});
+        }.bind(this));
+    }
+    
     render() {
         return (
             <div>
                 <Header />
-                <Body watchlists={this.props.watchlists}/>
+                <Body watchlists={this.state.watchlists}/>
             </div>
         );
     }
 }
 
 ReactDOM.render(
-    <HashTagWatchLists watchlists={watchlists}/>,
+    <HashTagWatchLists />,
     document.getElementById('root')
 );

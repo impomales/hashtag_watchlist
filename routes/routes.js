@@ -3,6 +3,7 @@
 var path = process.cwd();
 var Watchlist = require('../models/watchlist');
 var User = require('../models/user');
+var Twitter = require('twitter');
 
 module.exports = function(app, passport) {
     function isLoggedIn(req, res, next) {
@@ -99,5 +100,27 @@ module.exports = function(app, passport) {
                 if (err) throw new Error('failed to delete watchlist with id: ' + deleted._id);
                 res.json(result);
             });
+        });
+        
+    app.route('/api/tweets/:hashword')
+        .get(isLoggedIn, function(req, res) {
+           var client = new Twitter({
+                consumer_key: process.env.CONSUMER_KEY,
+                consumer_secret: process.env.CONSUMER_SECRET,
+                access_token_key: process.ACC_TOKEN_KEY,
+                access_token_secret: process.ACC_TOKEN_SECRET
+            });
+            
+            client.get('search/tweets',
+                {
+                    q: '%23' + req.params.hashword,
+                    result_type: 'recent',
+                    count: '5',
+                    lang: 'en'
+                },
+                function(err, tweets, response) {
+                    if (err) throw new Error('error in getting tweets.');
+                    res.json(tweets);
+                }); 
         });
 };
