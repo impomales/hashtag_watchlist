@@ -36,6 +36,15 @@ module.exports = function(app, passport) {
             successRedirect: '/',
             failuteRedirect: '/login'
         }));
+        
+    // get currently logged in user info.
+    app.route('/api/currentUser')
+        .get(isLoggedIn, function(req, res) {
+            User.findOne({_id: req.user._id}, function(err, doc) {
+                if (err) throw new Error('error getting current user.');
+                res.json(doc);
+            });
+        });
     
     // all watchlists.
     app.route('/api/watchlists')

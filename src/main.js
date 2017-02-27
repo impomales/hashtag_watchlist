@@ -11,14 +11,45 @@ var watchlists = [
 class Hash extends React.Component {
     render() {
         return (
-            <div></div>
+            <td>
+                <h1>{this.props.title}</h1>
+                <p>recent tweets</p>
+            </td>
+        );
+    }
+}
+        
+class HashRow extends React.Component {
+    render() {
+        var list = this.props.watchlists.map(function(item, index) {
+            return (
+                <Hash key={index} title={item.hashtag_title}/>
+            );
+        });
+        return (
+            <div>
+                <table>
+                    <tbody>
+                        <tr>{list}</tr>
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }
         
 class AddHash extends React.Component {
     render() {
-        return (
+        if (this.props.length < 3) {
+            return (
+                <div>
+                    <form>
+                        <input type='text' placeholder='Add a hash tag' />
+                    </form>
+                </div>
+            );
+        }
+        else return (
             <div></div>
         );
     }
@@ -28,8 +59,8 @@ class Body extends React.Component {
     render() {
         return (
             <div>
-                <Hash />
-                <AddHash />
+                <HashRow watchlists={this.props.watchlists}/>
+                <AddHash length={this.props.watchlists.length}/>
             </div>
         );
     }
@@ -53,13 +84,13 @@ class HashTagWatchLists extends React.Component {
         return (
             <div>
                 <Header />
-                <Body />
+                <Body watchlists={this.props.watchlists}/>
             </div>
         );
     }
 }
 
 ReactDOM.render(
-    <HashTagWatchLists />,
+    <HashTagWatchLists watchlists={watchlists}/>,
     document.getElementById('root')
 );
