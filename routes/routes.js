@@ -65,7 +65,7 @@ module.exports = function(app, passport) {
         
     // get watchlists by user.
     app.route('/api/user/watchlists')
-        .get(function(req, res) {
+        .get(isLoggedIn, function(req, res) {
             Watchlist.find({watched_by: req.user._id}, function(err, result) {
                 if (err) throw new Error('failed to get watchlists by ' + req.user._id);
                 res.json(result);
@@ -73,7 +73,7 @@ module.exports = function(app, passport) {
         });
         
     app.route('/api/edit')
-        .put(function(req, res) {
+        .put(isLoggedIn, function(req, res) {
             var update = req.body;
             // need to check that user._id == watched_by
             Watchlist.findByIdAndUpdate(update._id, update, function(err, result) {
@@ -83,7 +83,7 @@ module.exports = function(app, passport) {
         });
         
     app.route('/api/delete')
-        .delete(function(req, res) {
+        .delete(isLoggedIn, function(req, res) {
             var deleted = req.body;
             // need to check that user._id == watched_by
             Watchlist.remove({_id: deleted._id}, function(err, result) {
