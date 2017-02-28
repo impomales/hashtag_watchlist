@@ -4,6 +4,7 @@
   "description": "altlegal coding challege. sets up hashtag watchlists",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "mocha test.js",
     "sass": "sass ./public/main.scss ./public/main.css",
     "app": "node browserify.js && node index.js"
