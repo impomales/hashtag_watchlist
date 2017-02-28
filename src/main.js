@@ -5,9 +5,10 @@ require('dotenv').load();
 
 class Tweet extends React.Component {
     render() {
+        var url = 'https://twitter.com/' + this.props.name;
         return (
             <div>
-                <img src={this.props.image} />
+                <a href={url}><img src={this.props.image} /></a>
                 <h3>{this.props.name}</h3>
                 <p>{this.props.text}</p>
             </div>
@@ -18,13 +19,66 @@ class Tweet extends React.Component {
 class Hash extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {tweets: []};
+        this.state = {tweets: [], edit: false, value: this.props.title};
+        
+        this.handleRemove = this.handleRemove.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
     
     componentDidMount() {
-        $.ajax('/api/tweets/:' + this.props.title.substring(1)).done(function(data) {
+        this.updateTweets();
+    }
+    
+    updateTweets() {
+        $.ajax('/api/tweets/:' + this.state.value.substring(1)).done(function(data) {
             this.setState({tweets: data.statuses});
         }.bind(this));
+    }
+    
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+    
+    handleSubmit(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/api/edit',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({id: this.props.id, value: this.state.value}),
+            success: function(data) {
+                console.log('watchlist edited successfully');
+                this.props.update();
+                this.updateTweets();
+                this.setState({edit: false});
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+        
+    }
+    
+    handleRemove() {
+        $.ajax({
+            url: '/api/delete',
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify({id: this.props.id}),
+            success: function(data) {
+                console.log('watchlist deleted successfully');
+                this.props.update();
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    }
+    
+    handleEdit() {
+        this.setState({edit: true});
     }
     
     render() {
@@ -38,9 +92,35 @@ class Hash extends React.Component {
                 />
             );
         });
+        
+        var title;
+        
+        if (this.state.edit) {
+            //form
+            title = (
+                <form onSubmit={this.handleSubmit}>
+                    <input 
+                            type='text' 
+                            placeholder='Add a hash tag'
+                            pattern='^#\w+'
+                            title='hashtag must start with "#" and only alphamuneric'
+                            value={this.state.value}
+                            onChange={this.handleChange}/>
+                </form>    
+            );
+        } else {
+            title = (
+                <h1 id='hashtag'>
+                    {this.props.title}
+                    <button onClick={this.handleEdit}>edit</button>
+                    <button onClick={this.handleRemove}>remove</button>
+                </h1>
+            );
+        }
+        
         return (
             <td>
-                <h1>{this.props.title}</h1>
+                {title}
                 {tweets}
             </td>
         );
@@ -49,9 +129,10 @@ class Hash extends React.Component {
         
 class HashRow extends React.Component {
     render() {
+        var update = this.props.update;
         var list = this.props.watchlists.map(function(item, index) {
             return (
-                <Hash key={index} title={item.hashtag_title}/>
+                <Hash key={index} title={item.hashtag_title} update={update} id={item._id}/>
             );
         });
         return (
@@ -90,6 +171,7 @@ class AddHash extends React.Component {
             success: function(data) {
                 console.log('watchlist added successfully');
                 this.props.update();
+                this.setState({value: ''});
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
@@ -123,7 +205,7 @@ class Body extends React.Component {
     render() {
         return (
             <div>
-                <HashRow watchlists={this.props.watchlists}/>
+                <HashRow watchlists={this.props.watchlists} update={this.props.update}/>
                 <AddHash length={this.props.watchlists.length} update={this.props.update}/>
             </div>
         );

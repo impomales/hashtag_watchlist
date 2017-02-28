@@ -15,4 +15,13 @@ body {
 #logInOut:hover {
   color: #008B78; }
 
+#hashtag button {
+  opacity: 0; }
+
+#hashtag:hover button {
+  background-color: white;
+  color: #137ABE;
+  border: none;
+  opacity: 1; }
+
 /*# sourceMappingURL=main.css.map */

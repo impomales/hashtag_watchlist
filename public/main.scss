@@ -27,3 +27,18 @@ body {
 #logInOut:hover {
     color: $brand-green;
 }
+
+#hashtag {
+    button {
+        opacity: 0;
+    }
+}
+
+#hashtag:hover {
+    button {
+        background-color: white;
+        color: $blue;
+        border: none;
+        opacity: 1;
+    }
+}

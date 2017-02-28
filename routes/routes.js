@@ -87,20 +87,23 @@ module.exports = function(app, passport) {
         
     app.route('/api/edit')
         .put(isLoggedIn, function(req, res) {
-            var update = req.body;
-            // need to check that user._id == watched_by
-            Watchlist.findByIdAndUpdate(update._id, update, function(err, result) {
-                if (err) throw new Error('failed to edit watchlist with id: ' + update._id);
+            var update = {
+                hashtag_title: req.body.value,
+                watched_by: req.user._id
+            };
+            
+            var id = req.body.id;
+            Watchlist.findByIdAndUpdate(id, update, function(err, result) {
+                if (err) throw new Error('failed to edit watchlist with id: ' + id);
                 res.json(result);
             });
         });
         
     app.route('/api/delete')
         .delete(isLoggedIn, function(req, res) {
-            var deleted = req.body;
-            // need to check that user._id == watched_by
-            Watchlist.remove({_id: deleted._id}, function(err, result) {
-                if (err) throw new Error('failed to delete watchlist with id: ' + deleted._id);
+            var id = req.body.id;
+            Watchlist.remove({_id: id}, function(err, result) {
+                if (err) throw new Error('failed to delete watchlist with id: ' + id);
                 res.json(result);
             });
         });
