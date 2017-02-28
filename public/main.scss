@@ -14,17 +14,18 @@ body {
     color: $normal-text;
 }
 
-#logInOut:link {
+.logInOut:link {
     text-decoration: none;
     padding: 10px;
     box-shadow: 0px 1px 2px #999;
+    margin: 5px;
 }
 
-#logInOut:visited {
+.logInOut:visited {
     color: black;
 }
 
-#logInOut:hover {
+.logInOut:hover {
     color: $brand-green;
 }
 
@@ -36,9 +37,18 @@ body {
 
 #hashtag:hover {
     button {
+        font-family: Lato;
         background-color: white;
         color: $blue;
         border: none;
         opacity: 1;
     }
+}
+
+.margin {
+    margin: 10px;
+}
+
+.margin-link {
+    margin: 20px;
 }

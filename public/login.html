@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
     <head>
         <title>Login Page</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
         <link href='/public/main.css' rel='stylesheet' type='text/css'/>
     </head>
     <body>
-        <img src='/public/img/logo.png' />
-        <a id='logInOut' href='/auth/twitter'>Sign in with Twitter</a>
+        <div class='container-fluid'>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-8'>
+                    <img src='/public/img/logo.png' class='margin'/>
+                </div>
+                <div class='col-xs-12 col-sm-4'>
+                    <div class='margin-link'>
+                        <a class='logInOut' href='/auth/twitter'>Sign in with Twitter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

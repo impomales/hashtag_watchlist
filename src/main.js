@@ -1,5 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Grid = require('react-bootstrap').Grid;
+var Row = require('react-bootstrap').Row;
+var Col = require('react-bootstrap').Col;
 var $ = require('jquery');
 require('dotenv').load();
 
@@ -119,10 +122,10 @@ class Hash extends React.Component {
         }
         
         return (
-            <td>
+            <Col xs={4}>
                 {title}
                 {tweets}
-            </td>
+            </Col>
         );
     }
 }
@@ -136,13 +139,13 @@ class HashRow extends React.Component {
             );
         });
         return (
-            <div>
-                <table>
-                    <tbody>
-                        <tr>{list}</tr>
-                    </tbody>
-                </table>
-            </div>
+            <Col xs={4 * this.props.watchlists.length}>
+                <Grid>
+                    <Row>
+                        {list}
+                    </Row>
+                </Grid>
+            </Col>
         );
     }
 }
@@ -182,8 +185,9 @@ class AddHash extends React.Component {
     render() {
         if (this.props.length < 3) {
             return (
-                <div>
+                <Col xs={4}>
                     <form onSubmit={this.handleSubmit}>
+                        
                         <input 
                             type='text' 
                             placeholder='Add a hash tag'
@@ -192,7 +196,7 @@ class AddHash extends React.Component {
                             value={this.state.value}
                             onChange={this.handleChange}/>
                     </form>
-                </div>
+                </Col>
             );
         }
         else return (
@@ -204,10 +208,11 @@ class AddHash extends React.Component {
 class Body extends React.Component {
     render() {
         return (
-            <div>
+            <Row>
                 <HashRow watchlists={this.props.watchlists} update={this.props.update}/>
+                
                 <AddHash length={this.props.watchlists.length} update={this.props.update}/>
-            </div>
+            </Row>
         );
     }
 }
@@ -226,12 +231,18 @@ class Header extends React.Component {
     
     render() {
         return (
-            <div>
-                <img src='/public/img/small_logo.png' />
-                <h2>Signed in as: </h2>
-                <h4>{this.state.user.name}</h4>
-                <a id='logInOut' href='/logout'>Log out</a>
-            </div>
+            <Row>
+                <Col xs={8}>
+                    <img className='margin' src='/public/img/small_logo.png' />
+                </Col>
+                <Col xs={4}>
+                    <h2>Signed in as: </h2>
+                    <h4>{this.state.user.name}</h4>
+                    <div className='margin-link'>
+                        <a className='logInOut' href='/logout'>Log out</a>
+                    </div>
+                </Col>
+            </Row>
         );
     }
 }
@@ -257,10 +268,10 @@ class HashTagWatchLists extends React.Component {
 
     render() {
         return (
-            <div>
+            <Grid fluid>
                 <Header />
                 <Body watchlists={this.state.watchlists} update={this.update}/>
-            </div>
+            </Grid>
         );
     }
 }

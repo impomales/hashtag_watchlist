@@ -4,24 +4,32 @@ body {
   font-family: Montserrat;
   color: #333A39; }
 
-#logInOut:link {
+.logInOut:link {
   text-decoration: none;
   padding: 10px;
-  box-shadow: 0px 1px 2px #999; }
+  box-shadow: 0px 1px 2px #999;
+  margin: 5px; }
 
-#logInOut:visited {
+.logInOut:visited {
   color: black; }
 
-#logInOut:hover {
+.logInOut:hover {
   color: #008B78; }
 
 #hashtag button {
   opacity: 0; }
 
 #hashtag:hover button {
+  font-family: Lato;
   background-color: white;
   color: #137ABE;
   border: none;
   opacity: 1; }
+
+.margin {
+  margin: 10px; }
+
+.margin-link {
+  margin: 20px; }
 
 /*# sourceMappingURL=main.css.map */
