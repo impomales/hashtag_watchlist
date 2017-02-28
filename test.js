@@ -148,27 +148,5 @@ describe('Test App', function() {
                 done();
             });
         });
-        
-        it('can add a new watchlist', function(done) {
-            var newWatchlist = {
-                hashtag_title: '#fishes'
-            };
-            superagent
-                .post(URL_ROOT + '/api/watchlists')
-                .set('Content-Type', 'application/json')
-                .send(newWatchlist)
-                .end(function(err, res) {
-                    assert.ifError(err);
-                    var result;
-                    assert.doesNotThrow(function() {
-                        result = JSON.parse(res.text);
-                    });
-                    assert.equal(result.hashtag_title, '#fishes');
-                    assert.equal(result.settings.number_of_tweets, 5);
-                    done();
-                });
-        });
-        
-        // add tests for editing and deleting watchlists.
     });
 });
