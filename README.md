@@ -1,4 +1,4 @@
 # HASHTAG WATCHLIST
 
 
-- Go to \<link here\> to see running application.
+- Go to https://hashtag-watchlist.herokuapp.com to see running application.
