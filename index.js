@@ -12,7 +12,7 @@ var app = express();
 require('dotenv').load();
 require('./config/passport')(passport);
 
-mongoose.connect('mongodb://' + process.env.IP + '/local');
+mongoose.connect(process.env.MONGO_URL);
 
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(bodyParser.json());
